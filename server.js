@@ -56,6 +56,7 @@ app.get('/posts/:postid', function (req, res) {
     res.send(data)
   })
 })
+
 // 3) to handle deleting a post
 app.delete('/posts/:postid', function (req, res) {
   Post.findByIdAndRemove(req.params.postid, function (err, data) {
@@ -65,21 +66,35 @@ app.delete('/posts/:postid', function (req, res) {
 })
 
 // 4) to handle adding a comment to a post
-app.post('/posts/:postid/comments', function(req, res){
+app.post('/posts/:postid/comments', function (req, res) {
   var comment = {
-    user:req.body.user,
-    text:req.body.text
+    user: req.body.user,
+    text: req.body.text
   }
-  Post.findByIdAndUpdate(req.params.postid, {  $push:{  comments:comment  }  }, {new:true}, function(err, data){
+  Post.findByIdAndUpdate(req.params.postid, {
+    $push: {
+      comments: comment
+    }
+  }, {
+    new: true
+  }, function (err, data) {
     res.send(data)
   })
 })
 
 // 5) to handle deleting a comment from a post
-app.delete('/posts/:postid/comments/:commid', function(req, res){
+app.delete('/posts/:postid/comments/:commid', function (req, res) {
   var postid = req.params.postid
   var commid = req.params.commid
-  Post.findByIdAndUpdate(req.params.postid, {$pull:{comments:{_id:req.params.commid}}},{  new:true  }, function(err, data){
+  Post.findByIdAndUpdate(req.params.postid, {
+    $pull: {
+      comments: {
+        _id: req.params.commid
+      }
+    }
+  }, {
+    new: true
+  }, function (err, data) {
     res.send(data)
   })
 })

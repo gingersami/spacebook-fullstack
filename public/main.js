@@ -7,6 +7,7 @@ var SpacebookApp = function () {
   _retrievePosts();
 
   function _retrievePosts() {
+    // gets posts from database and inserts them into posts
     $.get({
       url: '/posts',
       success: function (data) {
