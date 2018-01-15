@@ -7,11 +7,15 @@ var mongoose = require('mongoose');
 //you only need a posts collection
 
 var commentSchema = new mongoose.Schema({
+    user:String,
+    text:String
 
 });
 
 
 var postSchema = new mongoose.Schema({
+    text:String,
+    comments:[commentSchema]
 
 });
 
