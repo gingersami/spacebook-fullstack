@@ -47,6 +47,7 @@ app.post('/posts', (req, res) => {
     comments: []
   })
   post.save();
+  res.send(post)
 })
 
 // TEST ROUTE
@@ -71,30 +72,16 @@ app.post('/posts/:postid/comments', function (req, res) {
     user: req.body.user,
     text: req.body.text
   }
-  Post.findByIdAndUpdate(req.params.postid, {
-    $push: {
-      comments: comment
-    }
-  }, {
-    new: true
-  }, function (err, data) {
+  Post.findByIdAndUpdate(req.params.postid, 
+    {$push: {comments: comment }}, { new: true }, function (err, data) {
     res.send(data)
   })
 })
 
 // 5) to handle deleting a comment from a post
 app.delete('/posts/:postid/comments/:commid', function (req, res) {
-  var postid = req.params.postid
-  var commid = req.params.commid
-  Post.findByIdAndUpdate(req.params.postid, {
-    $pull: {
-      comments: {
-        _id: req.params.commid
-      }
-    }
-  }, {
-    new: true
-  }, function (err, data) {
+   Post.findByIdAndUpdate(req.params.postid, 
+    { $pull: { comments: { _id: req.params.commid  }}}, { new: true }, function (err, data) {
     res.send(data)
   })
 })
