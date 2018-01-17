@@ -6,19 +6,20 @@ var SpacebookApp = function () {
   // _renderPosts();
   _retrievePosts();
 
-  function _retrievePosts() {
+  function _retrievePosts(e) {
+    posts=[]
     // gets posts from database and inserts them into posts
     $.get({
       url: '/posts',
-      success: function (data) {
-        for (i in data) {
-          posts[i] = data[i];
-          _renderPosts();
-        }
+      success: function (data,e) {
+        posts = data
+        _renderPosts();
         console.log(posts)
       }
     })
   }
+
+  _renderPosts();
 
   function _renderPosts() {
     $posts.empty();
@@ -79,12 +80,13 @@ var SpacebookApp = function () {
       type: "POST",
       url: "/posts/" + postID + "/comments",
       data: newComment,
+      
       success: function () {
         _retrievePosts()
+        _renderComments(postIndex);
       }
     })
-    posts[postIndex].comments.push(newComment);
-    _renderComments(postIndex);
+    // posts[postIndex].comments.push(newComment);
   };
 
 
@@ -133,7 +135,7 @@ $posts.on('click', '.toggle-comments', function () {
   $clickedPost.find('.comments-container').toggleClass('show');
 });
 
-$posts.on('click', '.add-comment', function () {
+$posts.on('click', '.add-comment', function (e) {
 
   var $comment = $(this).siblings('.comment');
   var $user = $(this).siblings('.name');
@@ -149,8 +151,7 @@ $posts.on('click', '.add-comment', function () {
     text: $comment.val(),
     user: $user.val()
   };
-
-  app.addComment(newComment, postID, postIndex);
+  app.addComment(newComment, postID, postIndex,e);
 
   $comment.val("");
   $user.val("");
@@ -166,3 +167,7 @@ $posts.on('click', '.remove-comment', function () {
 
   app.deleteComment(postIndex, commentIndex, commentID, postID);
 });
+
+$posts.on('click', '.edit-post', function(){
+  $(this).closest('.post').append("<form> <input class='form-control' type='text' id='postText' placeholder='Enter Post Text'/></form>")
+})
